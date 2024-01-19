@@ -3,7 +3,13 @@
 /** @type {{ d: string; }} */
 const argv = global.argv;
 
-const pkgs = argv.p.split(',');
+let pkgs = argv.p;
+
+try {
+  pkgs = JSON.parse(pkgs);
+} catch {
+  pkgs = pkgs.split(',');
+}
 
 const rootDir = process.cwd();
 
