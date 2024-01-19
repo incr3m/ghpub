@@ -21,7 +21,7 @@ for (const pkgKey of pkgs) {
   cd(pkgDir)
   
   // git reset HEAD~1 --soft
-  await $`yarn version --patch --no-git-tag-version --message "${pkg} version %s"`
+  await $`yarn version --patch --message "${pkg} version %s"`
   console.info('>>npm/publish-package::', `bump ${pkg} version`); //TRACE
   
   // $`npm publish`
