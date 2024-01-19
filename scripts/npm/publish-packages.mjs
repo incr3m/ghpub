@@ -13,6 +13,8 @@ try {
 
 const rootDir = process.cwd();
 
+await $`git config --global user.email "gh-action-bump-version@users.noreply.github.com"`
+await $`git config --global user.name "Automated Version Bump"`
 
 for (const pkgKey of pkgs) {
   const pkg = pkgKey.trim();
