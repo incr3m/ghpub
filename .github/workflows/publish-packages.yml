@@ -6,6 +6,9 @@ on:
       - master
     paths: ['packages/**']
 
+permissions:
+  contents: write
+
 jobs:
   changed_files:
     runs-on: ubuntu-latest  # windows-latest || macos-latest
