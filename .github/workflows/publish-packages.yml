@@ -1,0 +1,28 @@
+name: Publish packages
+
+on:
+  push:
+    branches:
+      - main
+    paths: ['packages/**']
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest  # windows-latest || macos-latest
+    name: Test changed-files
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        base: ${{ github.ref }}
+        filters: |
+          core-ui: packages/core-ui
+          config-eslint: packages/config-jest
+
+    - name: bump ${{ matrix.package }}
+      run: npx zx scripts/npm/publish-package.mjs -p ${{ fromJSON(needs.changes.outputs.packages) }}
