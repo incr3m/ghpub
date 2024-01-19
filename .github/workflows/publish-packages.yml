@@ -25,4 +25,4 @@ jobs:
           config-eslint: packages/config-jest
 
     - name: bump ${{ matrix.package }}
-      run: npx zx scripts/npm/publish-packages.mjs -p ${{ fromJSON(steps.filter.outputs.changes) }}
+      run: npx zx scripts/npm/publish-packages.mjs -p ${{ toJSON(steps.filter.outputs.changes) }}
