@@ -22,10 +22,11 @@ jobs:
         base: ${{ github.ref }}
         filters: |
           core-ui: packages/core-ui/**
-          config-eslint: packages/config-jest/**
+          config-eslint: packages/config-eslint/**
 
     - name: bump ${{ matrix.package }}
       run: npx zx scripts/npm/publish-packages.mjs -p ${{ toJSON(steps.filter.outputs.changes) }}
 
     - run: git status
     - run: git log
+    - run: git push
