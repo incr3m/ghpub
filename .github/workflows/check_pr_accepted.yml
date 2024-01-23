@@ -54,7 +54,7 @@ jobs:
           script: |-
             map(select(. | startswith("Client"))) | map(. | sub("Client: "; ""))
 
-      - if: fromJSON(steps.labels.outputs.output).length == 0
+      - if: steps.labels.outputs.output == '[]'
         run: |
           echo ${{ steps.labels.outputs.output }}
           echo "::error title=Client tag not found"
