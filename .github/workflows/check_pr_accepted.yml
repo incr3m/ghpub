@@ -49,7 +49,7 @@ jobs:
     needs: pr_checks
     strategy:
       matrix:
-        label: ${{ fromJSON(github.event.pull_request.labels.*.name) }}
+        label: ${{ github.event.pull_request.labels.*.name }}
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ matrix.label }}
