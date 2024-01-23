@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   pr_checks:
-    if: "{{ !contains( github.event.pull_request.labels.*.name, 'PR: Invalid') }}"
     runs-on: ubuntu-latest
     permissions:
       issues: read
