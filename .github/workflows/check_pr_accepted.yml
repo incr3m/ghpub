@@ -54,6 +54,11 @@ jobs:
           script: |-
             map(select(. | startswith("Client"))) | map(. | sub("Client: "; ""))
 
+      - if: fromJSON(steps.labels.outputs.output).length == 0
+        run: |
+          echo "::error title=Client tag not found"
+          exit 1
+
   # JOB to build and test each of modified diffs
   check_accepted:
     needs: pr_checks
