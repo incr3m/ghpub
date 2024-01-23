@@ -1,0 +1,48 @@
+name: PR Check Accepted
+on:
+  pull_request_target:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr_checks:
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ github.event.pull_request.labels.*.name }}
+    steps:
+    - name: copy-labels
+        uses: michalvankodev/copy-issue-labels@v1.3.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+    # - id: diffs
+    #   uses: dorny/paths-filter@v2
+    #   # if: contains('["synchronize","labeled","unlabeled"]', github.event.action)
+    #   with:
+    #     base: ${{ github.ref }}
+    #     filters: |
+    #       LAWD:
+    #         - 'apps/main/src/modules/lawd/**'
+    #       TESTxxx:
+    #         - 'frontend/**'      
+    
+
+ # JOB to build and test each of modified diffs
+  check_accepted:
+    needs: pr_checks
+    strategy:
+      matrix:
+        instance: ${{ fromJSON(needs.pr_checks.outputs.labels) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+        with:
+            github-token: '${{ secrets.GITHUB_TOKEN }}'
+            valid-labels: 'Accepted: ${{ matrix.instance }}, Review: ${{ matrix.instance }}'
+            # invalid-labels: 'help wanted, invalid'
+            pull-request-number: '${{ github.event.pull_request.number }}'

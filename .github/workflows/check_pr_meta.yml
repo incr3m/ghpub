@@ -5,8 +5,6 @@ on:
       - opened
       - edited
       - synchronize
-      - labeled
-      - unlabeled
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,31 +13,8 @@ concurrency:
 jobs:
   pr_checks:
     runs-on: ubuntu-latest
-    outputs:
-      diffs: ${{ steps.diffs.outputs.changes }}
     steps:
-    - id: diffs
-      uses: dorny/paths-filter@v2
-      if: contains('["synchronize","labeled","unlabeled"]', github.event.action)
-      with:
-        base: ${{ github.ref }}
-        filters: |
-          LAWD:
-            - 'apps/main/src/modules/lawd/**'
-          frontend:
-            - 'frontend/**'      
-
- # JOB to build and test each of modified packages
-  check_accepted:
-    needs: pr_checks
-    strategy:
-      matrix:
-        instance: ${{ fromJSON(needs.pr_checks.outputs.diffs) }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+      - uses: actions/checkout@v3
         with:
-            github-token: '${{ secrets.GITHUB_TOKEN }}'
-            valid-labels: 'Accepted: ${{ matrix.instance }}'
-            # invalid-labels: 'help wanted, invalid'
-            pull-request-number: '${{ github.event.pull_request.number }}'
+          sparse-checkout: '.github'
+          sparse-checkout-cone-mode: false
