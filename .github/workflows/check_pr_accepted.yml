@@ -52,10 +52,16 @@ jobs:
         label: ${{ github.event.pull_request.labels.*.name }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ matrix.label }}
-      # - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
-      #   with:
-      #     github-token: "${{ secrets.GITHUB_TOKEN }}"
-      #     valid-labels: "Accepted: ${{ matrix.instance }}, Review: ${{ matrix.instance }}"
-      #     # invalid-labels: 'help wanted, invalid'
-      #     pull-request-number: "${{ github.event.pull_request.number }}"
+      - uses: winterjung/split@v2
+        id: split
+        with:
+          msg: ${{ matrix.label }}
+          separator: ": "
+          
+      - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+        if: steps.split.outputs._0 == 'Client'
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          valid-labels: "Accepted: ${{ steps.split.outputs._0 }}, Review: ${{ steps.split.outputs._0 }}"
+          # invalid-labels: 'help wanted, invalid'
+          pull-request-number: "${{ github.event.pull_request.number }}"
