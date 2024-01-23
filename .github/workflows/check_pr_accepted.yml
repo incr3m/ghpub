@@ -52,7 +52,7 @@ jobs:
           compact: true
           input: "${{ toJSON(github.event.pull_request.labels.*.name) }}"
           script: |-
-            map(select(. | startswith("Client"))) | map(. | sub("Client:"; ""))
+            map(select(. | startswith("Client"))) | map(. | sub("Client: "; ""))
 
   # JOB to build and test each of modified diffs
   check_accepted:
