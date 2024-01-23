@@ -20,7 +20,9 @@ jobs:
     #   labels: ${{ github.event.pull_request.labels.*.name }}
     steps:
       - if: "contains( github.event.pull_request.labels.*.name, 'PR: Invalid')"
-        run: echo "::error title=Please remove invalid label"
+        run: |
+          echo "::error title=Please remove invalid label"
+          exit 1
 
       - uses: nearform-actions/github-action-check-linked-issues@v1
         id: check-linked-issues
