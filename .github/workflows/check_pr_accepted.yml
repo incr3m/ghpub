@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   pr_checks:
+    if: "{{ contains( github.event.pull_request.labels.*.name, 'PR: Invalid') }}"
     runs-on: ubuntu-latest
     permissions:
       issues: read
@@ -34,7 +35,7 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         if: failure() && steps.check-linked-issues.outputs.linked_issues_count == 0
         with:
-          labels: PR:invalid
+          labels: "PR: Invalid"
 
     # - id: diffs
     #   uses: dorny/paths-filter@v2
