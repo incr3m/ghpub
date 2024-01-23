@@ -56,6 +56,7 @@ jobs:
 
       - if: fromJSON(steps.labels.outputs.output).length == 0
         run: |
+          echo ${{ steps.labels.outputs.output }}
           echo "::error title=Client tag not found"
           exit 1
 
