@@ -39,7 +39,7 @@ jobs:
         with:
           labels: "PR: Invalid"
 
-      - if: github.event.action == "opened"
+      - if: github.event.action == 'opened'
         run: |
           echo "::error title=Accept label needed"
           exit 1
