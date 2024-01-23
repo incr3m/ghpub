@@ -13,13 +13,29 @@ concurrency:
 jobs:
   pr_checks:
     runs-on: ubuntu-latest
+    permissions:
+      issues: read
+      pull-requests: write
     # outputs:
     #   labels: ${{ github.event.pull_request.labels.*.name }}
     steps:
+      - uses: nearform-actions/github-action-check-linked-issues@v1
+        id: check-linked-issues
+        with:
+          exclude-branches: "release/**, dependabot/**"
+
       - name: copy-labels
+        if: steps.check-linked-issues.outputs.linked_issues_count > 0
         uses: michalvankodev/copy-issue-labels@v1.3.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: add label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: steps.check-linked-issues.outputs.linked_issues_count == 0
+        with:
+          labels: PR:invalid
+
     # - id: diffs
     #   uses: dorny/paths-filter@v2
     #   # if: contains('["synchronize","labeled","unlabeled"]', github.event.action)
