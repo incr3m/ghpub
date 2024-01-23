@@ -16,8 +16,8 @@ jobs:
     permissions:
       issues: read
       pull-requests: write
-    # outputs:
-    #   labels: ${{ github.event.pull_request.labels.*.name }}
+    outputs:
+      labels: ${{ github.event.pull_request.labels.*.name }}
     steps:
       - if: "contains( github.event.pull_request.labels.*.name, 'PR: Invalid')"
         run: |
@@ -41,28 +41,23 @@ jobs:
         with:
           labels: "PR: Invalid"
 
-    # - id: diffs
-    #   uses: dorny/paths-filter@v2
-    #   # if: contains('["synchronize","labeled","unlabeled"]', github.event.action)
-    #   with:
-    #     base: ${{ github.ref }}
-    #     filters: |
-    #       LAWD:
-    #         - 'apps/main/src/modules/lawd/**'
-    #       TESTxxx:
-    #         - 'frontend/**'
+      - if: github.event.action == "opened"
+        run: |
+          echo "::error title=Accept label needed"
+          exit 1
 
   # JOB to build and test each of modified diffs
-  # check_accepted:
-  #   needs: pr_checks
-  #   strategy:
-  #     matrix:
-  #       instance: ${{ fromJSON(needs.pr_checks.outputs.labels) }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
-  #       with:
-  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
-  #         valid-labels: "Accepted: ${{ matrix.instance }}, Review: ${{ matrix.instance }}"
-  #         # invalid-labels: 'help wanted, invalid'
-  #         pull-request-number: "${{ github.event.pull_request.number }}"
+  check_accepted:
+    needs: pr_checks
+    strategy:
+      matrix:
+        label: ${{ fromJSON(needs.pr_checks.outputs.labels) }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ matrix.label }}
+      # - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+      #   with:
+      #     github-token: "${{ secrets.GITHUB_TOKEN }}"
+      #     valid-labels: "Accepted: ${{ matrix.instance }}, Review: ${{ matrix.instance }}"
+      #     # invalid-labels: 'help wanted, invalid'
+      #     pull-request-number: "${{ github.event.pull_request.number }}"
