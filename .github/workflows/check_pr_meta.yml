@@ -18,8 +18,9 @@ jobs:
     outputs:
       diffs: ${{ steps.diffs.outputs.changes }}
     steps:
-    - uses: dorny/paths-filter@v2
-      id: diffs
+    - id: diffs
+      uses: dorny/paths-filter@v2
+      if: contains('["synchronize","labeled","unlabeled"]', github.event.action)
       with:
         base: ${{ github.ref }}
         filters: |
@@ -29,7 +30,7 @@ jobs:
             - 'frontend/**'      
 
  # JOB to build and test each of modified packages
-  build:
+  check_accepted:
     needs: pr_checks
     strategy:
       matrix:
