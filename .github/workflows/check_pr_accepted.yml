@@ -50,7 +50,7 @@ jobs:
         id: labels
         with:
           compact: true
-          input: "${{ fromJSON(github.event.pull_request.labels.*.name) }}"
+          input: "${{ toJSON(github.event.pull_request.labels.*.name) }}"
           script: |-
             map(select(. | startswith("Client"))) | map(. | sub("Client:"; ""))
 
