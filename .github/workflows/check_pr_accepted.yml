@@ -16,8 +16,6 @@ jobs:
     permissions:
       issues: read
       pull-requests: write
-    outputs:
-      labels: ${{ github.event.pull_request.labels.*.name }}
     steps:
       - if: "contains( github.event.pull_request.labels.*.name, 'PR: Invalid')"
         run: |
@@ -51,7 +49,7 @@ jobs:
     needs: pr_checks
     strategy:
       matrix:
-        label: ${{ fromJSON(needs.pr_checks.outputs.labels) }}
+        label: ${{ fromJSON(github.event.pull_request.labels.*.name) }}
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ matrix.label }}
