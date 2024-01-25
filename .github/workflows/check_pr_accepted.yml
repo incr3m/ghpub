@@ -5,6 +5,8 @@ on:
       - opened
       - labeled
       - unlabeled
+  issue_comment:
+    types: [created]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,10 +14,15 @@ concurrency:
 
 jobs:
   pr_checks:
+    if: |
+      github.event_name == 'pull_request_target' || 
+      (github.event.issue.pull_request && contains(github.event.comment.body, '/recheck'))
     runs-on: ubuntu-latest
     permissions:
       issues: read
       pull-requests: write
+    outputs:
+      labels: "${{ steps.labels.outputs.output }}"
     steps:
       - if: "contains( github.event.pull_request.labels.*.name, 'PR: Invalid')"
         run: |
@@ -39,9 +46,22 @@ jobs:
         with:
           labels: "PR: Invalid"
 
-      - if: github.event.action == "opened"
+      - if: github.event.action == 'opened'
         run: |
           echo "::error title=Accept label needed"
+          exit 1
+
+      - uses: cloudposse/github-action-jq@main
+        id: labels
+        with:
+          compact: true
+          input: "${{ toJSON(github.event.pull_request.labels.*.name) }}"
+          script: |-
+            map(select(. | startswith("Client"))) | map(. | sub("Client: "; ""))
+
+      - if: steps.labels.outputs.output == '[]'
+        run: |
+          echo "::error title=Client tag not found"
           exit 1
 
   # JOB to build and test each of modified diffs
@@ -49,13 +69,12 @@ jobs:
     needs: pr_checks
     strategy:
       matrix:
-        label: ${{ github.event.pull_request.labels.*.name }}
+        client: ${{ fromJSON(needs.pr_checks.outputs.labels) }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ matrix.label }}
-      # - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
-      #   with:
-      #     github-token: "${{ secrets.GITHUB_TOKEN }}"
-      #     valid-labels: "Accepted: ${{ matrix.instance }}, Review: ${{ matrix.instance }}"
-      #     # invalid-labels: 'help wanted, invalid'
-      #     pull-request-number: "${{ github.event.pull_request.number }}"
+      - uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          valid-labels: "Accepted: ${{ matrix.client }}, Review: ${{ matrix.client }}"
+          # invalid-labels: 'help wanted, invalid'
+          pull-request-number: "${{ github.event.pull_request.number }}"
