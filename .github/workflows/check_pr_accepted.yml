@@ -5,7 +5,7 @@ on:
       - opened
       - labeled
       - unlabeled
-  pull_request_review_comment:
+  issue_comment:
     types: [created]
 
 concurrency:
@@ -16,7 +16,7 @@ jobs:
   pr_checks:
     if: |
       github.event_name == 'pull_request_target' ||
-      (github.event_name == 'pull_request_review_comment' && 
+      (github.event.issue.pull_request && 
       contains(github.event.comment.body, '/recheck'))
     runs-on: ubuntu-latest
     permissions:
