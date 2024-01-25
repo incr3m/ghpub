@@ -5,6 +5,8 @@ on:
       - opened
       - labeled
       - unlabeled
+  pull_request_review_comment:
+    types: [created]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
