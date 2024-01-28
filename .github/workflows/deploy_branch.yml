@@ -22,7 +22,7 @@ jobs:
       - uses: github/branch-deploy@v8.2.1
         id: branch-deploy
         with:
-          trigger: ".deploy"
+          trigger: ".review"
           environment: 'github-pages'
           production_environments: 'github-pages'
           environment_targets: 'github-pages'
