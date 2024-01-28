@@ -23,6 +23,9 @@ jobs:
         id: branch-deploy
         with:
           trigger: ".deploy"
+          environment: 'github-pages'
+          production_environments: 'github-pages'
+          environment_targets: 'github-pages'
 
       # Run your deployment logic for your project here - examples seen below
 
