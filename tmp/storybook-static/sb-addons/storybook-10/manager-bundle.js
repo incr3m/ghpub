@@ -1,3 +1,0 @@
-try{
-(()=>{var d=__STORYBOOK_THEMING__,{CacheProvider:i,ClassNames:g,Global:p,ThemeProvider:O,background:b,color:T,convert:y,create:o,createCache:S,createGlobal:f,createReset:k,css:u,darken:x,ensure:C,ignoreSsrWarning:N,isPropValid:R,jsx:B,keyframes:D,lighten:G,styled:K,themes:Y,typography:v,useTheme:E,withTheme:I}=__STORYBOOK_THEMING__;var j=__STORYBOOK_ADDONS__,{addons:a,types:w,mockChannel:U}=__STORYBOOK_ADDONS__;var s=o({base:"light",brandTitle:"Embrace Storybook",brandUrl:"https://embrace.technology",brandImage:"https://embrace.technology/assets_c/images/logo.png",brandTarget:"_self"});a.setConfig({theme:s});})();
-}catch(e){ console.error("[Storybook] One of your manager-entries failed: " + import.meta.url, e); }

@@ -1,1 +1,0 @@
-import{j as e}from"./TransitionGroupContext-9d36972e.js";import"./index-f1f749bf.js";import{F as i,I as t}from"./Play-87fed129.js";import{B as a}from"./papaparse.min-b66e70e7.js";function x(s){return e.jsx(a,{className:s.classes?s.classes.container:"",children:e.jsx(i,{...s,children:e.jsx(t,{...s,classes:void 0})})})}export{x as T};

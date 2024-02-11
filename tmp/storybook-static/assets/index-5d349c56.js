@@ -1,1 +1,0 @@
-import"./TransitionGroupContext-9d36972e.js";import{r as t}from"./index-f1f749bf.js";let r=o=>console.log(o);const n=o=>{t.useEffect(()=>{if(window.location.origin.includes("localhost"))return r(o),()=>{r(null)}},[o])};export{n as u};
