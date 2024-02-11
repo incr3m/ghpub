@@ -21,6 +21,27 @@ jobs:
         with:
           ref: ${{ steps.branch-deploy.outputs.ref }}
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.14.1
+
+      - name: Install Playwright Browsers
+        run: |
+          mkdir xxpw && npm init -y \
+          && npm i is-odd && npm ci \
+          && npx playwright install --with-deps \
+          && npm remove is-odd
+
+      - name: Install packages
+        id: pnpm-install
+        run: pnpm install || pnpm install --no-frozen-lockfile
+
+      - name: Test storybook
+        run: |
+          pnpm run test-storybook \
+          --url https://embsb5266.d2f0p04mnv8zp2.amplifyapp.com/ \
+          --includeTags LAWD" --junit
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
