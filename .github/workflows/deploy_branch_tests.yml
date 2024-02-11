@@ -30,9 +30,14 @@ jobs:
           ref: ${{ steps.branch-deploy.outputs.ref }}
 
       - run: echo xxx${{ steps.branch-deploy.outputs.environment }}
+      
       - uses: actions/setup-node@v3
         with:
           node-version: 18.16.1
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.14.1
 
       - run: unzip storybook-static.zip
         working-directory: ./tmp
