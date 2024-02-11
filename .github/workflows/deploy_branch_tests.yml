@@ -39,8 +39,13 @@ jobs:
         with:
           version: 8.14.1
 
-      - name: Install playwright browsers
-        run: pnpm playwright install --with-deps
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./pw
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        working-directory: ./pw
 
       - name: Install packages
         id: pnpm-install
