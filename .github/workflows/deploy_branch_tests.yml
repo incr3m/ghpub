@@ -20,9 +20,10 @@ jobs:
         id: branch-deploy
         with:
           trigger: "/test"
+          environment: "test"
           production_environments: "test"
-          skip_reviews: 'test'
-          skip_ci: 'test'
+          skip_reviews: "test"
+          skip_ci: "test"
 
       - uses: actions/checkout@v4
         with:
