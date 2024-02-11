@@ -1,11 +1,8 @@
 import { dirname, join } from "path";
 import { mergeConfig } from "vite";
+import { StorybookConfig } from "@storybook/react-vite";
 
-function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, "package.json")));
-}
-
-const config = {
+const config: StorybookConfig = {
   async viteFinal(...args) {
     const [config, { configType }] = args;
     // // optimize memory usage
@@ -14,24 +11,13 @@ const config = {
     // return the customized config
     return mergeConfig(config, {
       // sync vite.config.ts plugins here
-      resolve: {
-        alias: {
-          // https://github.com/aws-amplify/amplify-ui/issues/268#issuecomment-953375909
-          "./runtimeConfig": "./runtimeConfig.browser",
-        },
-      },
       plugins: [],
     });
   },
   // logLevel: 'debug',
   stories: ["../src/modules/**/stories/**/*.stories.@(js|jsx|ts|tsx)"],
 
-  addons: [
-    getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@storybook/addon-links"),
-    getAbsolutePath("@storybook/addon-jest"),
-    getAbsolutePath("@storybook/addon-interactions"),
-  ],
+  addons: [],
 
   typescript: {
     check: false,

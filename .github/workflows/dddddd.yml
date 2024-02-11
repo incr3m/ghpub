@@ -1,0 +1,56 @@
+name: "ddd branch tests"
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+
+permissions:
+  pull-requests: write
+  deployments: write
+  contents: write
+  issues: read
+  checks: write
+
+jobs:
+  deploy_branch_reviews:
+    runs-on: ubuntu-latest
+    if: "contains( github.event.pull_request.labels.*.name, 'CI: Testing')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.branch-deploy.outputs.ref }}
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.14.1
+
+      - name: Install Playwright Browsers
+        run: |
+          mkdir xxpw && npm init -y \
+          && npm i is-odd && npm ci \
+          && npx playwright install --with-deps \
+          && npm remove is-odd
+
+      - name: Install packages
+        id: pnpm-install
+        run: pnpm install || pnpm install --no-frozen-lockfile
+
+      - name: Test storybook
+        run: |
+          pnpm run test-storybook \
+          --url https://embsb5266.d2f0p04mnv8zp2.amplifyapp.com/ \
+          --includeTags LAWD" --junit
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          search_pull_requests: true
+          files: |
+            junit.xml
+
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: |
+            CI: Testing
