@@ -43,7 +43,8 @@ jobs:
         run: |
           mkdir xxpw && npm init -y \
           && npm i is-odd && npm ci \
-          && npx playwright install-deps chromium
+          && npx playwright install --with-deps \
+          && npm remove is-odd
 
       - name: Install packages
         id: pnpm-install
