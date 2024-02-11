@@ -1,0 +1,45 @@
+name: "Deploy branch tests"
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  deployments: write
+  contents: write
+  checks: read
+
+jobs:
+  deploy_branch_reviews:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/test')
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/github/branch-deploy/blob/main/docs/examples.md#multiple-jobs-with-github-pages-and-hugo
+      - uses: github/branch-deploy@v8.2.1
+        id: branch-deploy
+        with:
+          trigger: "/test"
+          skip_reviews: 'production'
+          skip_ci: 'production'
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.branch-deploy.outputs.ref }}
+
+      - run: echo xxx${{ steps.branch-deploy.outputs.environment }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.1
+
+      - name: success comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          reactions: rocket
+          body: |
+            ### Deployment Results ✅
+
+            **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
+
+            > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
