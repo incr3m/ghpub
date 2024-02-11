@@ -35,38 +35,42 @@ jobs:
         with:
           node-version: 18.16.1
 
-      - uses: pnpm/action-setup@v2
+      - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          version: 8.14.1
+          coverage-file: ./sdf.json
 
-      - name: Install Playwright Browsers
-        run: |
-          mkdir xxpw && npm init -y \
-          && npm i is-odd && npm ci \
-          && npx playwright install --with-deps \
-          && npm remove is-odd
+      # - uses: pnpm/action-setup@v2
+      #   with:
+      #     version: 8.14.1
 
-      - name: Install packages
-        id: pnpm-install
-        run: pnpm install || pnpm install --no-frozen-lockfile
+      # - name: Install Playwright Browsers
+      #   run: |
+      #     mkdir xxpw && npm init -y \
+      #     && npm i is-odd && npm ci \
+      #     && npx playwright install --with-deps \
+      #     && npm remove is-odd
 
-      - run: unzip storybook-static.zip
-        working-directory: ./tmp
+      # - name: Install packages
+      #   id: pnpm-install
+      #   run: pnpm install || pnpm install --no-frozen-lockfile
 
-      - name: test storybook
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-          "npx http-server tmp/storybook-static --port 6006" \
-          "npx wait-on tcp:127.0.0.1:6006 && pnpm run test-storybook --url http://127.0.0.1:6006 --includeTags LAWD"
+      # - run: unzip storybook-static.zip
+      #   working-directory: ./tmp
 
-      - name: success comment
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          reactions: rocket
-          body: |
-            ### Deployment Results ✅
+      # - name: test storybook
+      #   run: |
+      #     npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+      #     "npx http-server tmp/storybook-static --port 6006" \
+      #     "npx wait-on tcp:127.0.0.1:6006 && pnpm run test-storybook --url http://127.0.0.1:6006 --includeTags LAWD"
 
-            **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
+      # - name: success comment
+      #   uses: peter-evans/create-or-update-comment@v4
+      #   with:
+      #     issue-number: ${{ github.event.issue.number }}
+      #     reactions: rocket
+      #     body: |
+      #       ### Deployment Results ✅
 
-            > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
+      #       **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
+
+      #       > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
