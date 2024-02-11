@@ -35,9 +35,13 @@ jobs:
         with:
           node-version: 18.16.1
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+
+      
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
         with:
-          coverage-file: ./sdf.json
+          junitxml-title: My JUnit Title
+          junitxml-path: ./junit.xml
 
       # - uses: pnpm/action-setup@v2
       #   with:
