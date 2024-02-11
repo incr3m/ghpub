@@ -40,7 +40,8 @@ jobs:
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          coverage-summary-path: ./sdf.json
+          junitxml-title: My JUnit Title
+          junitxml-path: ./junit.xml
 
       # - uses: pnpm/action-setup@v2
       #   with:
