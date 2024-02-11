@@ -1,0 +1,29 @@
+name: "ddd branch tests"
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+
+permissions:
+  pull-requests: write
+  deployments: write
+  contents: write
+  issues: read
+  checks: write
+
+jobs:
+  deploy_branch_reviews:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.branch-deploy.outputs.ref }}
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          search_pull_requests: true
+          files: |
+            junit.xml
