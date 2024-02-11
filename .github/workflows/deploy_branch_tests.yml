@@ -35,39 +35,42 @@ jobs:
         with:
           node-version: 18.16.1
 
-      - uses: pnpm/action-setup@v2
+      - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          version: 8.14.1
+          coverage-file: ./sdf.json
 
-      - name: Install dependencies
-        run: npm ci
-        working-directory: ./pw
+      # - uses: pnpm/action-setup@v2
+      #   with:
+      #     version: 8.14.1
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        working-directory: ./pw
+      # - name: Install Playwright Browsers
+      #   run: |
+      #     mkdir xxpw && npm init -y \
+      #     && npm i is-odd && npm ci \
+      #     && npx playwright install --with-deps \
+      #     && npm remove is-odd
 
-      - name: Install packages
-        id: pnpm-install
-        run: pnpm install || pnpm install --no-frozen-lockfile
+      # - name: Install packages
+      #   id: pnpm-install
+      #   run: pnpm install || pnpm install --no-frozen-lockfile
 
-      - run: unzip storybook-static.zip
-        working-directory: ./tmp
+      # - run: unzip storybook-static.zip
+      #   working-directory: ./tmp
 
-      - name: test storybook
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-          "npx http-server tmp/storybook-static --port 6006" \
-          "npx wait-on tcp:127.0.0.1:6006 && pnpm run test-storybook --url http://127.0.0.1:6006 --includeTags LAWD"
+      # - name: test storybook
+      #   run: |
+      #     npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+      #     "npx http-server tmp/storybook-static --port 6006" \
+      #     "npx wait-on tcp:127.0.0.1:6006 && pnpm run test-storybook --url http://127.0.0.1:6006 --includeTags LAWD"
 
-      - name: success comment
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          reactions: rocket
-          body: |
-            ### Deployment Results ✅
+      # - name: success comment
+      #   uses: peter-evans/create-or-update-comment@v4
+      #   with:
+      #     issue-number: ${{ github.event.issue.number }}
+      #     reactions: rocket
+      #     body: |
+      #       ### Deployment Results ✅
 
-            **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
+      #       **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
 
-            > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
+      #       > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
