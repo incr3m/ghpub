@@ -39,12 +39,12 @@ jobs:
         with:
           version: 8.14.1
 
+      - name: Install playwright browsers
+        run: pnpm playwright install --with-deps
+
       - name: Install packages
         id: pnpm-install
         run: pnpm install || pnpm install --no-frozen-lockfile
-
-      - name: Install playwright browsers
-        run: pnpm playwright install --with-deps
 
       - run: unzip storybook-static.zip
         working-directory: ./tmp
