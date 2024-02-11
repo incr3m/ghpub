@@ -34,6 +34,12 @@ jobs:
         with:
           node-version: 18.16.1
 
+      - name: test storybook
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+          "npx http-server storybook-static --port 6006 --silent" \
+          "npx wait-on tcp:6006 && pnpm run test-storybook --includeTags LAWD"
+
       - name: success comment
         uses: peter-evans/create-or-update-comment@v4
         with:

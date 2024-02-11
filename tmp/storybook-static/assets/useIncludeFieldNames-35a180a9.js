@@ -1,0 +1,1 @@
+import{R as r}from"./index-f1f749bf.js";import{d as a}from"./papaparse.min-b66e70e7.js";function f(e){const{namesRef:t}=r.useContext(a);e&&Object.entries(e).forEach(o=>{const[n,s]=o;isNaN(n)?t.current.names[n]=s:t.current.names[s]=void 0})}export{f as u};

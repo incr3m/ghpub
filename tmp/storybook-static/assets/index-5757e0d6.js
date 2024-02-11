@@ -1,0 +1,1 @@
+const a={isAdminRole:n=>{var t;const{role:e}=n;return((t=e==null?void 0:e.name)==null?void 0:t.toLowerCase())==="admin"},isStaffRole:n=>{var t;const{role:e}=n;return((t=e==null?void 0:e.name)==null?void 0:t.toLowerCase())==="staff"},isManagementRole:n=>{var t;const{role:e}=n;return((t=e==null?void 0:e.name)==null?void 0:t.toLowerCase())==="management"}};export{a as R};
