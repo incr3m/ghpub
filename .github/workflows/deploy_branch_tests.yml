@@ -1,0 +1,56 @@
+name: "Deploy branch tests"
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  deployments: write
+  contents: write
+  checks: read
+
+jobs:
+  deploy_branch_reviews:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/test')
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/github/branch-deploy/blob/main/docs/examples.md#multiple-jobs-with-github-pages-and-hugo
+      - uses: github/branch-deploy@v8.2.1
+        id: branch-deploy
+        with:
+          trigger: "/test"
+          environment: "test"
+          production_environments: "test"
+          skip_reviews: "test"
+          skip_ci: "test"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.branch-deploy.outputs.ref }}
+
+      - run: echo xxx${{ steps.branch-deploy.outputs.environment }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.1
+
+      - run: unzip storybook-static.zip
+        working-directory: ./tmp
+
+      - name: test storybook
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+          "npx http-server tmp/storybook-static --port 6006 --silent" \
+          "npx wait-on tcp:6006 && pnpm run test-storybook --includeTags LAWD"
+
+      - name: success comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          reactions: rocket
+          body: |
+            ### Deployment Results ✅
+
+            **${{ steps.branch-deploy.outputs.actor_handle }}** successfully deployed branch `${{ steps.branch-deploy.outputs.ref }}` to **${{ steps.branch-deploy.outputs.environment }}**
+
+            > [View Live Deployment](https://brev${{ github.event.issue.number }}.xxxx2222.amplifyapp.com) :link:
