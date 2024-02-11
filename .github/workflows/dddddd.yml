@@ -15,6 +15,7 @@ permissions:
 jobs:
   deploy_branch_reviews:
     runs-on: ubuntu-latest
+    if: "contains( github.event.pull_request.labels.*.name, 'CI: Testing')"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,3 +28,8 @@ jobs:
           search_pull_requests: true
           files: |
             junit.xml
+
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: |
+            CI: Testing
