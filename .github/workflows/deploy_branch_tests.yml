@@ -39,13 +39,11 @@ jobs:
         with:
           version: 8.14.1
 
-      - name: Install dependencies
-        run: npm ci
-        working-directory: ./pw
-
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        working-directory: ./pw
+        run: |
+          mkdir xxpw && npm init -y \
+          && npm i is-odd && npm ci \
+          npx playwright install-deps chromium
 
       - name: Install packages
         id: pnpm-install
