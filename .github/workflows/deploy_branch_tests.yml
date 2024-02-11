@@ -43,8 +43,8 @@ jobs:
         id: pnpm-install
         run: pnpm install || pnpm install --no-frozen-lockfile
 
-      - name: Install playwright
-        run: pnpm exec playwright install
+      - name: Install Playwright
+        run: npx playwright install --with-deps
 
       - run: unzip storybook-static.zip
         working-directory: ./tmp
