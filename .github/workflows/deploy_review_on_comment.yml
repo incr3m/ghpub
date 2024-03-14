@@ -1,0 +1,15 @@
+name: Deploy Review on Comment
+on:
+  issue_comment:
+    types: [created]
+
+# concurrency:
+#   group: review-${{ github.event.issue.number }}
+#   cancel-in-progress: true
+
+jobs:
+  Explore-GitHub-Actions:
+    if: github.event.issue.pull_request && github.event.comment.body == '/review'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(github.event) }}'
